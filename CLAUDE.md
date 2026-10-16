@@ -882,6 +882,19 @@ See [MEMORY.md](MEMORY.md) for phase-by-phase progress and decisions.
   supplied; the 2026-10-03 workflow 07 import left n8n down until Vishal recreated it by hand, because
   an assistant-run script reading the secret line was blocked. Also `docker restart` is not an option
   here, it only works on a container that still exists.
+- **An n8n container started without its env vars breaks EVERY workflow while the webhooks still
+  return 200 (2026-10-15).** On 2026-10-14 a container named `n8n` was created from
+  `n8nio/n8n:latest` with no `-e` flags and restart policy `unless-stopped` (not by `scripts/start.mjs`;
+  most likely Docker Desktop's image "Run" button after the `--rm` container had gone). Every node
+  reading `{{$env.X}}` failed with `ExpressionError: access to env vars denied`, so automatic order
+  acceptance (workflow 09) stopped stepping orders, and workflows 01-05 and 10 failed the same way.
+  Symptom: `net._http_response` shows 200 "Workflow was started" but the executions are `error`.
+  Check first: `docker inspect n8n --format '{{range .Config.Env}}{{println .}}{{end}}' | sed 's/=.*//'`
+  (names only) must list `N8N_INTERNAL_SECRET`, `APP_BASE_URL`, `SUPABASE_URL`,
+  `SUPABASE_SERVICE_ROLE_KEY`, `N8N_BLOCK_ENV_ACCESS_IN_NODE`. Fix: `docker rm -f n8n`, then recreate
+  it with the same `docker run` as `scripts/start.mjs` (or just run `npm run app:start`, which creates
+  it when missing), passing the secrets through the child environment (`-e NAME` with no value) so
+  they never appear on a command line. Never start n8n from Docker Desktop's Run button.
 
 - **A widget mounted in the ROOT layout cannot use a React context provided by a nested layout.**
   Ask Zippy's web widget lives in the root layout, `CartProvider` only under `/customer`, so

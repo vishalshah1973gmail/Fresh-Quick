@@ -121,7 +121,9 @@ end-to-end through the real app UI — see `docs/n8n-webhook-setup.md`
 section 6 for per-workflow results and section 1 for the confirmed-
 working docker run command (two env-var gotchas fixed there:
 `SUPABASE_URL` needs `host.docker.internal`, and
-`N8N_BLOCK_ENV_ACCESS_IN_NODE=false` is required). Everything else in
+`N8N_BLOCK_ENV_ACCESS_IN_NODE=false` is required). Start n8n only through `npm run app:start` (or that docker run command), never
+with Docker Desktop's image Run button: a container without those env vars accepts every
+webhook but fails every workflow with "access to env vars denied". Everything else in
 this README (checkout, vendor, delivery, admin flows) still works today
 without n8n running — those synchronous paths stay as the tested demo
 behavior regardless of whether n8n is connected. (Exception: the 5-minute
