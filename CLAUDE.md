@@ -1057,13 +1057,25 @@ before committing, then push `main` (step 5).
 Stop and report (never force, never `--no-verify`, never `git reset --hard`,
 never delete the branch) when: the commit would include anything that looks
 like a secret; `origin` isn't reachable/authorized (as has happened before in
-this repo — see `md_version/HANDOFF_2.md` for the collaborator-access issue);
+this repo — see `md_version/HANDOFF_2.md` for the collaborator-access issue,
+and the 2026-10-15 account note below);
 the tests fail on the merged result (leave the merge local and unpushed and
 show the failure); or the merge hits a conflict in anything other than
 documentation files. A conflict limited to the memory docs themselves
 (`CLAUDE.md`, `MEMORY.md`, `README.md`, `AGENTS.md`) may be resolved by keeping
 both sides' content; resolve it, say exactly what was merged, and continue.
 Keep the feature branch after merging (an open PR may still need it).
+
+**GitHub account (2026-10-15).** The repo lives at
+`https://github.com/vishalshah1973gmail/Fresh-Quick` (transferred from
+`vishalshah737704`, an account that has since been deleted; the old URL
+still redirected on 2026-10-15, but use the new one). Vishal now uses ONE GitHub account, `vishalshah1973gmail`:
+it is the only account in `gh`, and the global commit identity is
+`vishalshah1973gmail <vishalshah1973@gmail.com>`. Do not add `gh` logins
+for other accounts or set per-repo `user.name`/`user.email`. If a push
+returns 403, check `gh auth status` (active account must be
+`vishalshah1973gmail`) and Windows Credential Manager for a stale
+`git:https://github.com` entry before anything else.
 
 ## Standing phrase: "Update Manuals" — NON-NEGOTIABLE
 
