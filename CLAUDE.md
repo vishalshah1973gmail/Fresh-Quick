@@ -875,11 +875,21 @@ See [MEMORY.md](MEMORY.md) for phase-by-phase progress and decisions.
   refuse until it was scoped to how-to questions only. When adding a capability, re-read every
   existing prompt rule for wording that forbids it, and check with a live question, not only a
   prompt snapshot test.
+- **NON-NEGOTIABLE: never drop the `n8n` container (Vishal's rule, 2026-10-19).** It was lost twice
+  (2026-10-14 and 2026-10-18), and each loss broke every workflow until it was rebuilt by hand. Never
+  run `docker rm` / `docker rm -f` / `docker container rm` on it, never create it with `--rm`, and never
+  run `docker container prune`, `docker system prune`, or a compose `down` that could include it. Never
+  touch the `n8n_data` volume (`docker volume rm`, `docker volume prune`, `docker system prune --volumes`):
+  it holds every workflow, credential and the owner account. Use only `docker stop` / `start` / `restart`.
+  If the container really must be replaced (wrong env vars, wrong flags), STOP and ask Vishal first,
+  even under a standing phrase; then back up `/home/node/.n8n/database.sqlite` (plus `-wal`/`-shm`) with
+  `docker cp`, recreate it at once with `scripts/start.mjs`'s flags, and verify `AutoRemove` `false`,
+  restart `unless-stopped`, the five env names and the workflow count.
 - **The local n8n container runs WITHOUT `--rm` (changed 2026-10-18).** `docker stop n8n` keeps the
   container and its env; bring it back with `docker start n8n`, or `docker restart n8n` to reload
   published workflows. Do not add `--rm` back: it deleted the container on stop, and on 2026-10-18 the
-  container was lost that way (data survived in the `n8n_data` volume). `docker rm` still deletes it,
-  so only run that deliberately. The container is created by `scripts/start.mjs` with
+  container was lost that way (data survived in the `n8n_data` volume). `docker rm` still deletes it;
+  see the rule above. The container is created by `scripts/start.mjs` with
   `--restart unless-stopped`, which needs `N8N_INTERNAL_SECRET` from `.env.local`.
   **Changing the `docker run` flags does not change an existing container.** The 2026-10-18 fix edited
   `start.mjs` 8 minutes after a container had been created with `--rm`; that container kept `--rm`, and
@@ -895,8 +905,8 @@ See [MEMORY.md](MEMORY.md) for phase-by-phase progress and decisions.
   Symptom: `net._http_response` shows 200 "Workflow was started" but the executions are `error`.
   Check first: `docker inspect n8n --format '{{range .Config.Env}}{{println .}}{{end}}' | sed 's/=.*//'`
   (names only) must list `N8N_INTERNAL_SECRET`, `APP_BASE_URL`, `SUPABASE_URL`,
-  `SUPABASE_SERVICE_ROLE_KEY`, `N8N_BLOCK_ENV_ACCESS_IN_NODE`. Fix: `docker rm -f n8n`, then recreate
-  it with the same `docker run` as `scripts/start.mjs` (or just run `npm run app:start`, which creates
+  `SUPABASE_SERVICE_ROLE_KEY`, `N8N_BLOCK_ENV_ACCESS_IN_NODE`. Fix (only after Vishal approves,
+  per the never-drop rule above): back up the database, `docker rm -f n8n`, then recreate it with the same `docker run` as `scripts/start.mjs` (or just run `npm run app:start`, which creates
   it when missing), passing the secrets through the child environment (`-e NAME` with no value) so
   they never appear on a command line. Never start n8n from Docker Desktop's Run button.
 
