@@ -875,13 +875,17 @@ See [MEMORY.md](MEMORY.md) for phase-by-phase progress and decisions.
   refuse until it was scoped to how-to questions only. When adding a capability, re-read every
   existing prompt rule for wording that forbids it, and check with a live question, not only a
   prompt snapshot test.
-- **The local n8n container runs with `--rm`: `docker stop n8n` DELETES it** (state lives in the
-  `n8n_data` volume, so nothing is lost, but the container and its env must be recreated with the
-  `docker run` in `docs/n8n-webhook-setup.md`, which needs `N8N_INTERNAL_SECRET` from `.env.local`).
-  Never stop it just to import/publish a workflow without first making sure the secret can be
-  supplied; the 2026-10-03 workflow 07 import left n8n down until Vishal recreated it by hand, because
-  an assistant-run script reading the secret line was blocked. Also `docker restart` is not an option
-  here, it only works on a container that still exists.
+- **The local n8n container runs WITHOUT `--rm` (changed 2026-10-18).** `docker stop n8n` keeps the
+  container and its env; bring it back with `docker start n8n`, or `docker restart n8n` to reload
+  published workflows. Do not add `--rm` back: it deleted the container on stop, and on 2026-10-18 the
+  container was lost that way (data survived in the `n8n_data` volume). `docker rm` still deletes it,
+  so only run that deliberately. The container is created by `scripts/start.mjs` with
+  `--restart unless-stopped`, which needs `N8N_INTERNAL_SECRET` from `.env.local`.
+  **Changing the `docker run` flags does not change an existing container.** The 2026-10-18 fix edited
+  `start.mjs` 8 minutes after a container had been created with `--rm`; that container kept `--rm`, and
+  the Docker engine restart at 20:11 EDT the same evening deleted it (found 2026-10-19 in Docker Desktop's
+  `com.docker.backend.exe.log`: `"autoRemove":true` at creation, no CLI delete). After any flag change,
+  recreate the container and check `docker inspect n8n --format '{{.HostConfig.AutoRemove}}'` is `false`.
 - **An n8n container started without its env vars breaks EVERY workflow while the webhooks still
   return 200 (2026-10-15).** On 2026-10-14 a container named `n8n` was created from
   `n8nio/n8n:latest` with no `-e` flags and restart policy `unless-stopped` (not by `scripts/start.mjs`;
@@ -1133,7 +1137,7 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 - **Never hand-copy validation into the phone app: share a byte-identical copy and parity-test it.** The phone sign-up pincode check was a retyped regex missing its backslash (`/^d{6}$/`), so every pincode failed while the web version worked. `mobile/lib/signup-validation.ts` is now a guarded copy of `lib/signup-validation.ts`.
 - **Delivery-partner location is clamped to Mumbai (Vishal's rule, 2026-10-05).** `POST /api/delivery/ping` stores a reported point only inside the Mumbai box (`lib/mumbai-region.ts`); otherwise it keeps the stored Mumbai point or a Dadar default, so testing from another country never moves a partner or zooms the order map to the whole world. Customer location is the registration address.
 - **Address geocoding retries simpler forms before saying "not found"** (`buildFallbackAddresses` in `lib/geocode-parse.ts`: no line 2, unit details stripped, landmark only), each needing a precise result in the typed pincode. Not yet verified live with the real server key.
-- **Automatic order acceptance (demo mode, 2026-10-06).** Admin Overview checkbox backed by `app_settings` (migration 35) and n8n workflow 09; see MEMORY.md's "Automatic order acceptance" entry. Importing a workflow JSON via the n8n CLI needs a top-level `id`; `n8n publish:workflow` does not take effect until a restart, so publish in the n8n UI (signed-in browser) and republish after every re-import; never restart the `--rm` n8n container. An n8n Wait of N s gives gaps of about N+1 to N+2 s after webhook delay, so tune by measuring, not by the number.
+- **Automatic order acceptance (demo mode, 2026-10-06).** Admin Overview checkbox backed by `app_settings` (migration 35) and n8n workflow 09; see MEMORY.md's "Automatic order acceptance" entry. Importing a workflow JSON via the n8n CLI needs a top-level `id`; `n8n publish:workflow` does not take effect until a restart, so publish in the n8n UI (signed-in browser) and republish after every re-import (or `docker restart n8n`; the container is no longer `--rm`). An n8n Wait of N s gives gaps of about N+1 to N+2 s after webhook delay, so tune by measuring, not by the number.
 
 - **C3 lessons (2026-10-07).** The repo's react-hooks lint (`set-state-in-effect`) rejects "reset state in an effect", so the favorites providers and the Home reorder options store data tagged with its owner user id and derive the visible value (`owner === userId ? data : empty`), which also stops an account switch from showing the previous account's hearts. A heart or button nested inside a `<Link>` needs `preventDefault()` plus `stopPropagation()` or the tap also navigates. Reading `cart` after an `await` in a hook is a stale closure: read it from a ref. The generated `.next-delivery/` (the delivery role's dev dist dir) was corrupt and broke `npx tsc --noEmit` (10 errors) and `npm run build`; it was deleted with Vishal's approval on 2026-10-07 and the running delivery dev server recreated it. Before stopping or rebuilding anything on ports 3000-3003, check what owns the port: a subagent killed the customer all-roles dev server on :3000 and the iPhone sign-up failed with "Could not reach the server" until it was restarted with the project helper (`startBackgroundService` and `set NEXT_ROLE_DIST_DIR=.next-customer&& npm run dev -- -p 3000`); the phone reaches the web app at the PC's LAN address on port 3000.
 

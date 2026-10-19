@@ -69,7 +69,8 @@ if (!skipN8n) {
         [
           "run",
           "-d",
-          "--rm",
+          "--restart",
+          "unless-stopped",
           "--name",
           "n8n",
           "-p",

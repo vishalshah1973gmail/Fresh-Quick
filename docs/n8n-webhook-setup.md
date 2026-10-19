@@ -88,7 +88,7 @@ Next.js app on the host, Supabase self-hosted via `npx supabase start`) —
 verified end-to-end in the 2026-09-25 session:
 
 ```
-docker run -d --rm --name n8n -p 5678:5678 \
+docker run -d --restart unless-stopped --name n8n -p 5678:5678 \
   -v n8n_data:/home/node/.n8n \
   -e N8N_INTERNAL_SECRET=<same value as .env.local's N8N_INTERNAL_SECRET> \
   -e APP_BASE_URL=http://host.docker.internal:3000 \
@@ -98,9 +98,10 @@ docker run -d --rm --name n8n -p 5678:5678 \
   n8nio/n8n
 ```
 
-(`-d --rm` runs it detached so it survives the calling shell exiting, still
-auto-removed on `docker stop`; swap for `-it --rm` if you want it
-foreground/interactive instead.)
+(`-d` runs it detached so it survives the calling shell exiting.
+`--restart unless-stopped` brings it back after a Docker or PC restart. Do not
+use `--rm`: it deletes the container on `docker stop`. `docker stop n8n` now
+keeps the container, and `docker start n8n` brings it back.)
 
 ## 2. Supabase Database Webhook configuration
 
@@ -417,8 +418,7 @@ tests it takes `?minAgeMinutes=0` (0 to 1440, default 55). `PUBLIC_APP_URL`
 (default `http://localhost:3000`) controls the link in the email. The Gmail send is
 LIVE once published, so test only with an address you own. The workflow must be
 active for the Wait to resume. To load the change, re-import the JSON with a
-top-level `id` (CLI import needs one) and republish in the n8n UI; never stop or
-restart the `--rm` n8n container. Repo JSON is now 14 nodes.
+top-level `id` (CLI import needs one) and republish in the n8n UI. Repo JSON is now 14 nodes.
 
 ### If an order is stuck in picked_up
 
@@ -557,8 +557,8 @@ acceptance (demo mode)" checkbox. It does nothing while the checkbox is off.
 - **Import and publish:** `docker cp` the file into the n8n container and run
   `n8n import:workflow --input=...` (the file carries `id` and `active: false`; the
   import deactivates it), then PUBLISH IN THE n8n UI. The CLI `publish:workflow`
-  only takes effect after an n8n restart, and the container runs with `--rm`, so
-  never restart it. Re-importing deactivates the workflow again, so publish again
+  only takes effect after an n8n restart, so restart the container with `docker restart n8n`
+  (it keeps its env, since it is no longer `--rm`). Re-importing deactivates the workflow again, so publish again
   after every re-import. Needs migration 35 applied first.
 - **Test it:** tick the box, then insert a paid order (or place one) and watch
   `orders.status`. Real Gmail: workflows 03 and 05 mail the order's recipient.
@@ -566,7 +566,7 @@ acceptance (demo mode)" checkbox. It does nothing while the checkbox is off.
 
 ## Workflow 10: Notify Router (C4)
 
-File: `n8n/workflows/10-notify-router.json`. Import it like the others (needs a top-level `id`; publish in the n8n UI, never restart the `--rm` container). Trigger: webhook `POST /webhook/foodhub/notify-dispatch`, fired by the database trigger `n8n_notification_created` for every new inbox row. It calls `POST {APP_BASE_URL}/api/internal/notifications/dispatch` with the internal secret; the route claims undispatched rows and sends Expo push (and SMS/WhatsApp only when enabled in the app environment: `NOTIFY_SMS=on`, `NOTIFY_WHATSAPP=on`, `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, `TWILIO_SMS_FROM`, `TWILIO_WHATSAPP_FROM`). Until it is published, inbox rows are still created and shown in the apps; push just waits (rows older than 24 h are never pushed).
+File: `n8n/workflows/10-notify-router.json`. Import it like the others (needs a top-level `id`; publish in the n8n UI, or `docker restart n8n` to reload published workflows). Trigger: webhook `POST /webhook/foodhub/notify-dispatch`, fired by the database trigger `n8n_notification_created` for every new inbox row. It calls `POST {APP_BASE_URL}/api/internal/notifications/dispatch` with the internal secret; the route claims undispatched rows and sends Expo push (and SMS/WhatsApp only when enabled in the app environment: `NOTIFY_SMS=on`, `NOTIFY_WHATSAPP=on`, `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, `TWILIO_SMS_FROM`, `TWILIO_WHATSAPP_FROM`). Until it is published, inbox rows are still created and shown in the apps; push just waits (rows older than 24 h are never pushed).
 
 ## Workflow 11: Registration events (customer approval)
 
