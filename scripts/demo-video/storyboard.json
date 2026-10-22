@@ -1,0 +1,205 @@
+{
+  "voice": "en-IN-NeerjaNeural",
+  "rate": "-5%",
+  "scenes": [
+    {
+      "id": "01-title",
+      "card": { "title": "Fresh & Quick", "subtitle": "How to use the website" },
+      "narration": "Welcome to Fresh and Quick. In the next few minutes we'll show you how to sign up, place your first order, track it to your door, and rate it."
+    },
+    {
+      "id": "02-home",
+      "frame": "02-home.jpg",
+      "label": "Home page",
+      "highlight": [0, 0, 262, 675],
+      "narration": "This is the home page. You can browse every restaurant and store without an account. The menu on the left lists the categories, like Restaurants, Grocery and Pet."
+    },
+    {
+      "id": "03-signup-buttons",
+      "frame": "03-signup-buttons.jpg",
+      "label": "Sign In or Sign Up",
+      "highlight": [12, 552, 252, 662],
+      "narration": "To order, you need an account. New here? Click Sign Up at the bottom of the left menu. Already registered? Click Sign In."
+    },
+    {
+      "id": "04-signup-empty",
+      "frame": "04-signup-empty.jpg",
+      "label": "Sign up",
+      "highlight": [742, 74, 1092, 600],
+      "masks": [[1034, 137, 1063, 512]],
+      "narration": "This is where you sign up. Each box tells you what goes in it."
+    },
+    {
+      "id": "05-signup-top",
+      "frame": "05-signup-top.jpg",
+      "label": "Name, email and password",
+      "highlight": [756, 132, 1076, 246],
+      "masks": [[1034, 137, 1063, 512]],
+      "narration": "Enter your full name, your email address, and a password of at least six characters."
+    },
+    {
+      "id": "06-signup-address",
+      "frame": "06-signup-filled.jpg",
+      "label": "Mobile number and address",
+      "highlight": [756, 248, 1076, 477],
+      "masks": [[1034, 137, 1063, 512]],
+      "narration": "Next, your ten digit mobile number and your delivery address: address line one, an optional second line, city, state, and the six digit pincode. We check that the address is real, so please type it carefully."
+    },
+    {
+      "id": "07-signup-submit",
+      "frame": "06-signup-filled.jpg",
+      "label": "Referral code, then Sign up",
+      "highlight": [756, 478, 1076, 556],
+      "masks": [[1034, 137, 1063, 512]],
+      "narration": "If a friend invited you, enter their referral code here. Otherwise leave it blank. Then click Sign up."
+    },
+    {
+      "id": "08-pending",
+      "frame": "08-pending-popup.jpg",
+      "label": "Approval in progress",
+      "highlight": [606, 255, 962, 420],
+      "masks": [[1034, 175, 1063, 245], [1034, 404, 1063, 436]],
+      "narration": "After you sign up, you'll see this message. Every new account is reviewed by our team, and you'll get an email as soon as you're approved."
+    },
+    {
+      "id": "09-login-pending",
+      "frame": "09-login-pending.jpg",
+      "label": "Waiting for approval",
+      "highlight": [756, 208, 1076, 236],
+      "masks": [[1034, 137, 1063, 205]],
+      "narration": "If you try to log in before then, you'll see this reminder. Just wait for the approval email."
+    },
+    {
+      "id": "10-review-card",
+      "card": { "title": "Our team reviews every new account", "subtitle": "You'll get an email once you're approved" },
+      "narration": "Behind the scenes, our team reviews your details and approves your account. You'll get an email as soon as it's done."
+    },
+    {
+      "id": "11-login",
+      "frame": "11-login-filled.jpg",
+      "label": "Log in",
+      "highlight": [742, 74, 1092, 294],
+      "masks": [[1034, 137, 1063, 205]],
+      "narration": "Once you're approved, come back to the log in page, enter your email and password, and click Log in."
+    },
+    {
+      "id": "12-home-signed-in",
+      "frame": "12-home-signed-in.jpg",
+      "label": "Your delivery location",
+      "highlight": [398, 12, 686, 46],
+      "narration": "You're in. The address you gave at sign up is already set as your delivery location, at the top of the page. Stores are listed by distance from you."
+    },
+    {
+      "id": "13-location",
+      "frame": "13-location-picker.jpg",
+      "label": "Change delivery location",
+      "highlight": [400, 46, 726, 422],
+      "narration": "To deliver somewhere else, click your location. Search for an address, drag the pin on the map, or use your current location, then click Save location."
+    },
+    {
+      "id": "14-stores",
+      "frame": "14-home-stores.jpg",
+      "label": "Find a store",
+      "highlight": [278, 92, 1540, 520],
+      "narration": "Scroll to browse stores near you, or narrow the list with the cuisine buttons. Tap the heart on any store to save it to your Favorites."
+    },
+    {
+      "id": "15-store",
+      "frame": "15-store-page.jpg",
+      "label": "A store's page",
+      "highlight": [278, 72, 1188, 514],
+      "narration": "This is a store's page. You'll see its rating and reviews from other customers, and you can search its menu."
+    },
+    {
+      "id": "16-menu",
+      "frame": "16-store-menu.jpg",
+      "label": "Add dishes",
+      "highlight": [278, 300, 1540, 520],
+      "narration": "The menu is grouped by category. Click a category to jump to it, and click the plus button on a dish to add it to your basket. If a dish has choices, a window asks you to pick them first."
+    },
+    {
+      "id": "17-basket",
+      "frame": "17-basket.jpg",
+      "label": "Your basket",
+      "highlight": [1214, 0, 1568, 516],
+      "narration": "Your basket appears on the right. Change quantities, add a note for a dish, or a note for the whole order, like a gate code. Then click Checkout. A basket holds items from one store at a time."
+    },
+    {
+      "id": "18-contact",
+      "frame": "18-checkout-contact.jpg",
+      "label": "Checkout: contact details",
+      "highlight": [278, 138, 898, 398],
+      "masks": [[843, 350, 868, 380]],
+      "narration": "At checkout, fill in who the order is for: a name, an email for order updates, and a mobile number."
+    },
+    {
+      "id": "19-address",
+      "frame": "19-checkout-address.jpg",
+      "label": "Checkout: delivery address",
+      "highlight": [278, 62, 898, 498],
+      "narration": "Then the delivery address. Search for it, or click Use my pinned location to fill it in from your saved location. Check the pincode before you continue."
+    },
+    {
+      "id": "20-promo-payment",
+      "frame": "20-checkout-payment.jpg",
+      "label": "Promo code and payment",
+      "highlight": [278, 192, 898, 662],
+      "narration": "Have a promo code? Enter it and click Apply, and the discount shows straight away. Then choose how to pay: card, UPI, or cash on delivery. Payments in this demo are simulated, so no real money is charged."
+    },
+    {
+      "id": "21-place-order",
+      "frame": "20-checkout-payment.jpg",
+      "label": "Place your order",
+      "highlight": [1218, 274, 1566, 424],
+      "narration": "Check your total, then click Place order."
+    },
+    {
+      "id": "22-status",
+      "frame": "22-order-preparing.jpg",
+      "label": "Order status",
+      "highlight": [286, 180, 1532, 278],
+      "narration": "Your order page shows every step: placed, accepted, preparing, ready, on the way, and delivered. It updates by itself, so there's no need to refresh."
+    },
+    {
+      "id": "23-map",
+      "frame": "23-tracking-map.jpg",
+      "label": "Live tracking",
+      "highlight": [286, 116, 1532, 472],
+      "narration": "Once a delivery partner is assigned, a live map shows the store, your address and your rider, with an estimated arrival time."
+    },
+    {
+      "id": "23b-animation",
+      "frame": "23b-delivery-animation.jpg",
+      "label": "On the way",
+      "highlight": [518, 128, 1050, 546],
+      "narration": "When your order is picked up, a short animation follows your food to your door."
+    },
+    {
+      "id": "24-review",
+      "frame": "24-review.jpg",
+      "label": "Rate your order",
+      "highlight": [286, 338, 1532, 675],
+      "narration": "After delivery, tell us how it went. Rate the store, and if you like each dish and the delivery. Add a comment or a photo, then click Submit review."
+    },
+    {
+      "id": "25-orders",
+      "frame": "25-orders.jpg",
+      "label": "Your orders",
+      "highlight": [278, 124, 1554, 286],
+      "narration": "All your past orders are under Orders. Click Reorder to put the same dishes back in your basket in one click."
+    },
+    {
+      "id": "26-zippy",
+      "frame": "26-zippy.jpg",
+      "label": "Ask Zippy",
+      "highlight": [1200, 108, 1554, 662],
+      "masks": [[1422, 566, 1449, 594]],
+      "narration": "Need help? Click Ask Zippy at the bottom right. Zippy answers your questions, finds dishes, checks on your order, and can even fill your basket for you."
+    },
+    {
+      "id": "27-closing",
+      "card": { "title": "Fresh & Quick", "subtitle": "Fresh food, delivered fast." },
+      "narration": "That's it. Sign up, get approved, and enjoy your first order with Fresh and Quick."
+    }
+  ]
+}
